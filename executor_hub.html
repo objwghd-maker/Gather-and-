@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ตัวรัน</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080a0f;--panel:#11151d;--border:#27313d;--cyan:#66fcf1;--cyan2:#45a29e;--blue:#3d8bfd;--green:#42e695;--yellow:#ffd166;--text:#f2f5f7;--muted:#84909d}
+body{min-height:100vh;padding:18px 14px 40px;color:var(--text);font-family:"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 10% 0%,rgba(102,252,241,.10),transparent 30%),radial-gradient(circle at 90% 15%,rgba(61,139,253,.09),transparent 28%),radial-gradient(circle at 50% 100%,rgba(69,162,158,.06),transparent 35%),var(--bg)}
+button,input,select{font:inherit}
+.container{width:100%;max-width:850px;margin:auto}
+.header{position:relative;overflow:hidden;padding:25px 20px 22px;border-radius:22px;border:1px solid #284047;background:linear-gradient(135deg,rgba(31,40,51,.98),rgba(11,15,21,.98));box-shadow:0 15px 45px rgba(0,0,0,.25),inset 0 0 35px rgba(102,252,241,.025)}
+.header:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(102,252,241,.08);filter:blur(50px);right:-60px;top:-90px}
+.header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 12px rgba(102,252,241,.4)}
+.header-top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative;z-index:1}
+.logo-box{width:55px;height:55px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0b1117;border:1px solid #31515a;font-size:28px;box-shadow:0 0 20px rgba(102,252,241,.08)}
+.header-title{flex:1}
+.header h1{font-size:1.8rem;color:white;letter-spacing:.5px}
+.header h1 span{color:var(--cyan)}
+.header-sub{margin-top:4px;color:var(--muted);font-size:.75rem}
+.online-status{display:flex;align-items:center;gap:7px;padding:7px 11px;border-radius:20px;background:rgba(66,230,149,.07);border:1px solid rgba(66,230,149,.18);color:#8ceab6;font-size:.7rem;white-space:nowrap}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--green)}
+.header-description{position:relative;z-index:1;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.06);color:#9ba8b4;font-size:.82rem;line-height:1.6}
+.quick-info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.quick-card{padding:13px 8px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:15px;transition:.2s}
+.quick-card:hover{border-color:#35525a;transform:translateY(-1px)}
+.quick-icon{font-size:1.25rem}.quick-number{margin-top:4px;font-size:1.25rem;font-weight:800}.quick-label{margin-top:2px;color:var(--muted);font-size:.62rem}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:20px 4px 10px}.section-title h2{font-size:1rem}.section-title span{color:var(--muted);font-size:.68rem}
+.featured{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feature-card{position:relative;overflow:hidden;padding:16px;min-height:130px;border-radius:18px;border:1px solid #293843;background:linear-gradient(135deg,#151d27,#0d1219);transition:.2s}
+.feature-card:hover{border-color:#365e64;transform:translateY(-1px)}
+.feature-card:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(102,252,241,.06);filter:blur(25px);right:-30px;bottom:-30px}
+.feature-badge{display:inline-block;padding:4px 8px;border-radius:7px;background:rgba(102,252,241,.08);border:1px solid rgba(102,252,241,.16);color:var(--cyan);font-size:.6rem;font-weight:800}
+.feature-name{margin-top:12px;font-size:1rem;font-weight:800}.feature-desc{margin-top:6px;color:var(--muted);font-size:.7rem;line-height:1.5}
+.notice{margin-top:14px;padding:13px 15px;display:flex;align-items:center;gap:10px;border-radius:15px;background:linear-gradient(90deg,rgba(102,252,241,.07),rgba(61,139,253,.04));border:1px solid #234047}
+.notice-icon{font-size:1.2rem}.notice-content{min-width:0}.notice-title{font-weight:800;font-size:.78rem}.notice-text{margin-top:3px;color:var(--muted);font-size:.68rem}
+.toolbar{margin-top:16px;display:grid;grid-template-columns:1fr 170px;gap:9px}
+.search-box,.sort-select{width:100%;height:48px;background:#10161e;border:1px solid #25313d;border-radius:14px;color:white;outline:none}
+.search-box{padding:0 15px}.search-box::placeholder{color:#667482}
+.search-box:focus,.sort-select:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(102,252,241,.07)}
+.sort-select{padding:0 10px;cursor:pointer}
+.tabs{display:flex;gap:7px;margin-top:10px;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:none;padding:9px 15px;border-radius:12px;border:1px solid #25313d;background:#10161e;color:#84909d;cursor:pointer;font-size:.75rem;font-weight:700;transition:.2s}
+.tab-btn:hover{border-color:#3a5c65;color:white}.tab-btn.active{background:var(--cyan2);border-color:var(--cyan);color:#071012;box-shadow:0 0 14px rgba(102,252,241,.08)}
+.result-bar{display:flex;justify-content:space-between;align-items:center;margin:17px 4px 9px}.result-title{font-size:.9rem;font-weight:800}.result-count{color:var(--muted);font-size:.68rem}
+#executorList{display:flex;flex-direction:column;gap:10px}
+.card{position:relative;overflow:hidden;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(135deg,#151b24,#0f141b);border:1px solid #27323d;border-radius:18px;transition:.2s}
+.card:hover{border-color:#397c7d;transform:translateY(-1px);box-shadow:0 8px 25px rgba(0,0,0,.2)}
+.card:before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:3px;background:var(--cyan);box-shadow:0 0 10px rgba(102,252,241,.35)}
+.card-left{display:flex;align-items:center;gap:12px;min-width:0}.exec-icon{flex:none;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#0b1117;border:1px solid #263640;font-size:1.6rem}
+.info{min-width:0}.name-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.name{color:white;font-weight:800;font-size:.93rem}
+.badge{padding:3px 6px;border-radius:5px;font-size:.52rem;font-weight:900}.badge-new{color:#06110b;background:var(--green)}.badge-hot{color:#160a00;background:var(--yellow)}.badge-update{color:#071013;background:var(--cyan)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:6px}.platform-tag{padding:4px 8px;border-radius:7px;background:#0a1117;border:1px solid #24343d;color:var(--cyan);font-size:.58rem;font-weight:700}
+.version-text,.updated-text{color:#71808d;font-size:.6rem}.extra-row{display:flex;align-items:center;gap:10px;margin-top:7px;color:#687682;font-size:.6rem}
+.status-active{display:inline-flex;align-items:center;gap:5px;color:#70dca2}.status-active:before{content:"";width:6px;height:6px;border-radius:50%;background:#42e695;box-shadow:0 0 7px #42e695}
+.card-right{display:flex;align-items:center;gap:7px}.favorite-btn{width:39px;height:39px;border-radius:11px;background:#0b1117;border:1px solid #25323d;color:#71808d;cursor:pointer;transition:.2s}
+.favorite-btn:hover{color:#ffd166;border-color:#65572e}.favorite-btn.active{color:#ffcf45;border-color:#7b672d;background:rgba(255,209,102,.06)}
+.btn-download{height:40px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:11px;background:var(--cyan2);color:#061012;text-decoration:none;font-size:.7rem;font-weight:900;border:1px solid var(--cyan);transition:.2s}
+.btn-download:hover{background:var(--cyan);transform:translateY(-1px)}
+.empty-state{min-height:150px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;border-radius:18px;background:var(--panel);border:1px solid var(--border);color:var(--muted)}.empty-icon{font-size:2rem}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.info-panel{padding:16px;border-radius:17px;background:#10161e;border:1px solid #25313d}.info-panel h3{font-size:.82rem}
+.info-list{margin-top:10px;display:flex;flex-direction:column;gap:7px}.info-line{display:flex;justify-content:space-between;align-items:center;color:#84909d;font-size:.65rem}.info-line strong{color:#dce4ea}
+.footer{margin-top:18px;padding:18px;text-align:center;border-top:1px solid #202b35;color:#596774;font-size:.65rem}.footer strong{color:var(--cyan)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,120px);z-index:9999;padding:11px 16px;border-radius:12px;background:#161d26;border:1px solid #33414e;color:white;font-size:.7rem;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:.3s}.toast.show{transform:translate(-50%,0)}
+@media(max-width:620px){.quick-info{grid-template-columns:repeat(2,1fr)}.featured{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.card{align-items:flex-start}.card-right{width:100%}.favorite-btn{width:43px;height:40px}.btn-download{flex:1}.bottom-grid{grid-template-columns:1fr}.online-status{display:none}}
+@media(max-width:390px){.header h1{font-size:1.5rem}.header{padding:20px 15px}.logo-box{width:48px;height:48px;font-size:23px}.exec-icon{width:43px;height:43px;font-size:1.4rem}.name{font-size:.82rem}.extra-row{gap:6px}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header">
+<div class="header-top">
+<div class="logo-box">⚡</div>
+<div class="header-title">
+<h1><span>ตัวรัน</span> HUB</h1>
+<div class="header-sub">ศูนย์รวมตัวรันและข้อมูลเวอร์ชัน</div>
+</div>
+<div class="online-status"><span class="online-dot"></span>ONLINE</div>
+</div>
+<div class="header-description">ค้นหา ตรวจสอบหมวดหมู่ และดูรายละเอียดของรายการผ่านหน้าเดียว พร้อมระบบกรองและจัดเรียงข้อมูล</div>
+</header>
+
+<div class="quick-info">
+<div class="quick-card"><div class="quick-icon">📦</div><div class="quick-number" id="totalCount">5</div><div class="quick-label">รายการทั้งหมด</div></div>
+<div class="quick-card"><div class="quick-icon">🤖</div><div class="quick-number" id="androidCount">3</div><div class="quick-label">ANDROID</div></div>
+<div class="quick-card"><div class="quick-icon">🍎</div><div class="quick-number" id="iosCount">2</div><div class="quick-label">IOS</div></div>
+<div class="quick-card"><div class="quick-icon">⭐</div><div class="quick-number" id="favoriteCount">0</div><div class="quick-label">รายการโปรด</div></div>
+</div>
+
+<div class="section-title"><h2>🔥 รายการแนะนำ</h2><span>FEATURED</span></div>
+
+<div class="featured">
+<div class="feature-card">
+<span class="feature-badge">⭐ FEATURED</span>
+<div class="feature-name">Delta Executor</div>
+<div class="feature-desc">รายการสำหรับแพลตฟอร์มมือถือ พร้อมข้อมูลเวอร์ชันและประเภทไฟล์</div>
+</div>
+<div class="feature-card">
+<span class="feature-badge">🔄 UPDATED</span>
+<div class="feature-name">Arceus X</div>
+<div class="feature-desc">รายการที่มีข้อมูลแพลตฟอร์มและเวอร์ชันแยกไว้อย่างชัดเจน</div>
+</div>
+</div>
+
+<div class="notice">
+<div class="notice-icon">📢</div>
+<div class="notice-content">
+<div class="notice-title">ข่าวสาร</div>
+<div class="notice-text">รายการและข้อมูลสามารถค้นหา กรอง และจัดเรียงได้จากด้านล่าง</div>
+</div>
+</div>
+
+<div class="toolbar">
+<input id="searchBox" class="search-box" type="text" placeholder="🔍 ค้นหาชื่อตัวรัน..." autocomplete="off">
+<select id="sortSelect" class="sort-select">
+<option value="default">📋 ค่าเริ่มต้น</option>
+<option value="az">🔤 ชื่อ A-Z</option>
+<option value="za">🔤 ชื่อ Z-A</option>
+<option value="android-first">🤖 Android ก่อน</option>
+<option value="ios-first">🍎 iOS ก่อน</option>
+<option value="downloads">📥 ดาวน์โหลดสูงสุด</option>
+<option value="updated">🔄 อัปเดตล่าสุด</option>
+</select>
+</div>
+
+<div class="tabs" id="tabContainer">
+<button class="tab-btn active" data-cat="all">🌐 ทั้งหมด</button>
+<button class="tab-btn" data-cat="android">📱 Android</button>
+<button class="tab-btn" data-cat="ios">🍏 iOS</button>
+<button class="tab-btn" data-cat="favorite">⭐ รายการโปรด</button>
+</div>
+
+<div class="result-bar">
+<div class="result-title">รายการทั้งหมด</div>
+<div class="result-count" id="resultCount">แสดง 5 รายการ</div>
+</div>
+
+<div id="executorList"></div>
+
+<div class="bottom-grid">
+<div class="info-panel">
+<h3>📊 ข้อมูลระบบ</h3>
+<div class="info-list">
+<div class="info-line"><span>สถานะ</span><strong>ONLINE</strong></div>
+<div class="info-line"><span>แพลตฟอร์ม</span><strong>Android / iOS</strong></div>
+<div class="info-line"><span>ระบบค้นหา</span><strong>พร้อมใช้งาน</strong></div>
+<div class="info-line"><span>รายการโปรด</span><strong id="favoriteBottom">0</strong></div>
+</div>
+</div>
+
+<div class="info-panel">
+<h3>🛠️ ฟังก์ชัน</h3>
+<div class="info-list">
+<div class="info-line"><span>🔍 ค้นหา</span><strong>เปิด</strong></div>
+<div class="info-line"><span>📋 เรียงข้อมูล</span><strong>เปิด</strong></div>
+<div class="info-line"><span>⭐ Favorites</span><strong>เปิด</strong></div>
+<div class="info-line"><span>📱 Responsive</span><strong>เปิด</strong></div>
+</div>
+</div>
+</div>
+
+<footer class="footer">⚡ <strong>ตัวรัน HUB</strong><br><br>ระบบแสดงรายการ • ค้นหา • กรอง • จัดเรียง • รายการโปรด</footer>
+
+</div>
+
+<div id="toast" class="toast">เพิ่มในรายการโปรดแล้ว</div>
+
+<script>
+const executors=[
+{name:"Delta Executor (Android)",cat:"android",tag:"Android .APK",version:"v2.731.944",updated:"วันนี้",updateOrder:5,downloads:15420,badge:"HOT",url:"https://delta.filenetwork.vip/file/Delta-2.731.944-03.apk"},
+{name:"Delta Executor (iOS)",cat:"ios",tag:"iOS .IPA",version:"v2.731.944",updated:"วันนี้",updateOrder:5,downloads:11280,badge:"UPDATE",url:"https://deltaexploits.gg/delta-executor-ios"},
+{name:"Codex (Android)",cat:"android",tag:"Android .APK",version:"v2.731.944",updated:"เมื่อวาน",updateOrder:4,downloads:9820,badge:"NEW",url:"https://www.mediafire.com/file/2vcq4h8gk516qbq/Codex+v2.731.944.apk/file"},
+{name:"Arceus X (Android)",cat:"android",tag:"Android .APK",version:"v3.2.1",updated:"3 วันที่แล้ว",updateOrder:3,downloads:8430,badge:"",url:"https://spdmteam.com/download/android"},
+{name:"Arceus X (iOS)",cat:"ios",tag:"iOS .IPA",version:"v3.2.1",updated:"3 วันที่แล้ว",updateOrder:3,downloads:7210,badge:"",url:"https://spdmteam.com/download/ios"}
+];
+
+let currentCategory="all";
+let currentSort="default";
+let favorites=JSON.parse(localStorage.getItem("executorFavorites")||"[]");
+
+const domList=document.getElementById("executorList");
+const searchInput=document.getElementById("searchBox");
+const sortSelect=document.getElementById("sortSelect");
+const resultCount=document.getElementById("resultCount");
+const totalCount=document.getElementById("totalCount");
+const androidCount=document.getElementById("androidCount");
+const iosCount=document.getElementById("iosCount");
+const favoriteCount=document.getElementById("favoriteCount");
+const favoriteBottom=document.getElementById("favoriteBottom");
+const toast=document.getElementById("toast");
+
+function updateStats(){
+totalCount.textContent=executors.length;
+androidCount.textContent=executors.filter(item=>item.cat==="android").length;
+iosCount.textContent=executors.filter(item=>item.cat==="ios").length;
+favoriteCount.textContent=favorites.length;
+favoriteBottom.textContent=favorites.length;
+}
+
+function isFavorite(name){
+return favorites.includes(name);
+}
+
+function toggleFavorite(name){
+if(isFavorite(name)){
+favorites=favorites.filter(item=>item!==name);
+showToast("ลบออกจากรายการโปรดแล้ว");
+}else{
+favorites.push(name);
+showToast("เพิ่มในรายการโปรดแล้ว");
+}
+localStorage.setItem("executorFavorites",JSON.stringify(favorites));
+updateStats();
+renderList();
+}
+
+let toastTimer;
+
+function showToast(message){
+toast.textContent=message;
+toast.classList.add("show");
+clearTimeout(toastTimer);
+toastTimer=setTimeout(()=>{toast.classList.remove("show")},1800);
+}
+
+function applySorting(list){
+const sorted=[...list];
+
+if(currentSort==="az"){
+sorted.sort((a,b)=>a.name.localeCompare(b.name,"th"));
+}
+
+if(currentSort==="za"){
+sorted.sort((a,b)=>b.name.localeCompare(a.name,"th"));
+}
+
+if(currentSort==="android-first"){
+sorted.sort((a,b)=>{
+if(a.cat==="android"&&b.cat!=="android")return-1;
+if(a.cat!=="android"&&b.cat==="android")return 1;
+return 0;
+});
+}
+
+if(currentSort==="ios-first"){
+sorted.sort((a,b)=>{
+if(a.cat==="ios"&&b.cat!=="ios")return-1;
+if(a.cat!=="ios"&&b.cat==="ios")return 1;
+return 0;
+});
+}
+
+if(currentSort==="downloads"){
+sorted.sort((a,b)=>b.downloads-a.downloads);
+}
+
+if(currentSort==="updated"){
+sorted.sort((a,b)=>b.updateOrder-a.updateOrder);
+}
+
+return sorted;
+}
+
+function renderList(){
+const query=searchInput.value.trim().toLowerCase();
+
+let filtered=executors.filter(item=>{
+let categoryMatch;
+
+if(currentCategory==="favorite"){
+categoryMatch=isFavorite(item.name);
+}else{
+categoryMatch=currentCategory==="all"||item.cat===currentCategory;
+}
+
+const searchMatch=item.name.toLowerCase().includes(query);
+return categoryMatch&&searchMatch;
+});
+
+filtered=applySorting(filtered);
+resultCount.textContent=`แสดง ${filtered.length} รายการ`;
+domList.innerHTML="";
+
+if(filtered.length===0){
+domList.innerHTML=`
+<div class="empty-state">
+<div class="empty-icon">🔎</div>
+<strong>ไม่พบรายการ</strong>
+<span>ลองเปลี่ยนคำค้นหาหรือหมวดหมู่</span>
+</div>`;
+return;
+}
+
+filtered.forEach(item=>{
+const card=document.createElement("div");
+card.className="card";
+
+const icon=item.cat==="android"?"🤖":"🍎";
+let badgeHTML="";
+
+if(item.badge){
+let badgeClass;
+
+if(item.badge==="HOT"){
+badgeClass="badge-hot";
+}else if(item.badge==="NEW"){
+badgeClass="badge-new";
+}else{
+badgeClass="badge-update";
+}
+
+badgeHTML=`<span class="badge ${badgeClass}">${item.badge}</span>`;
+}
+
+const favorite=isFavorite(item.name);
+
+card.innerHTML=`
+<div class="card-left">
+<div class="exec-icon">${icon}</div>
+<div class="info">
+<div class="name-row">
+<div class="name">${item.name}</div>
+${badgeHTML}
+</div>
+<div class="meta-row">
+<span class="platform-tag">${item.tag}</span>
+<span class="version-text">${item.version}</span>
+<span class="updated-text">• ${item.updated}</span>
+</div>
+<div class="extra-row">
+<span class="status-active">พร้อมใช้งาน</span>
+<span>📥 ${item.downloads.toLocaleString()}</span>
+</div>
+</div>
+</div>
+
+<div class="card-right">
+<button class="favorite-btn ${favorite?"active":""}" data-favorite="${item.name}" title="รายการโปรด">${favorite?"★":"☆"}</button>
+<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-download">⬇️ เปิด</a>
+</div>`;
+
+domList.appendChild(card);
+});
+}
+
+domList.addEventListener("click",event=>{
+const button=event.target.closest("[data-favorite]");
+if(!button)return;
+event.preventDefault();
+toggleFavorite(button.dataset.favorite);
+});
+
+document.getElementById("tabContainer").addEventListener("click",event=>{
+const button=event.target.closest(".tab-btn");
+if(!button)return;
+
+currentCategory=button.dataset.cat;
+
+document.querySelectorAll(".tab-btn").forEach(btn=>btn.classList.remove("active"));
+button.classList.add("active");
+renderList();
+});
+
+searchInput.addEventListener("input",renderList);
+
+sortSelect.addEventListener("change",event=>{
+currentSort=event.target.value;
+renderList();
+});
+
+updateStats();
+renderList();
+</script>
+
+</body>
+</html>
